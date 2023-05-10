@@ -1,25 +1,53 @@
-const fs = require("fs");
-const { exec } = require("child_process");
+import pcsclite from "pcsclite";
+import fs from "fs";
+import { execSync } from "child_process";
+import { outputFile, outputUserFile, patterns, runFile } from "./const.js";
 
-const cwd = process.cwd();
-const resultFile = `${cwd}/tools/output.txt`;
+const pcsc = pcsclite();
+
+pcsc.on("reader", (reader) => {
+  console.log(`Reader '${reader.name}' detected`);
+
+  reader.on("status", (status) => {
+    const changes = reader.state ^ status.state;
+
+    if (
+      changes & reader.SCARD_STATE_PRESENT &&
+      status.state & reader.SCARD_STATE_PRESENT
+    ) {
+      console.log("Card inserted");
+
+      const user = scanIC();
+
+      console.log(`Done: ${user.Name}'s record saved.`);
+    }
+
+    if (
+      changes & reader.SCARD_STATE_EMPTY &&
+      status.state & reader.SCARD_STATE_EMPTY
+    ) {
+      console.log("Card removed");
+    }
+  });
+});
+
+function scanIC() {
+  const response = execSync(runFile, (error) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+  });
+
+  if (!response) return;
+
+  const user = extractInformation();
+
+  return user;
+}
 
 function extractInformation() {
-  const data = fs.readFileSync(resultFile, "utf8");
-
-  const patterns = [
-    { key: "Name", pattern: /Name:\s+(.*)/ },
-    { key: "IC", pattern: /IC:\s+(.*)/ },
-    { key: "Sex", pattern: /Sex:\s+(.*)/ },
-    { key: "Old IC", pattern: /Old IC:\s*(.?)\s/ },
-    { key: "DOB", pattern: /DOB:\s+(.*)/ },
-    { key: "State of birth", pattern: /State of birth:\s+(.*)/ },
-    { key: "Validity Date", pattern: /Validity Date:\s+(.*)/ },
-    { key: "Nationality", pattern: /Nationality:\s+(.*)/ },
-    { key: "Ethnic/Race", pattern: /Ethnic\/Race:\s+(.*)/ },
-    { key: "Religion", pattern: /Religion:\s+(.*)/ },
-    { key: "Address", pattern: /Address:\s+([\s\S]*?)(?=Reading JPN file 5)/m },
-  ];
+  const data = fs.readFileSync(outputFile, "utf8");
 
   const result = patterns.reduce((acc, { key, pattern }) => {
     const match = data.match(pattern);
@@ -34,22 +62,33 @@ function extractInformation() {
     return acc;
   }, {});
 
-  fs.writeFileSync(`${cwd}/tools/user.json`, JSON.stringify(result));
+  const user = {
+    Name: result.Name.replace(/[^\w\s]/gi, "")
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    IC: result.IC,
+    Sex: result.Sex.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()),
+    "Old IC": result["Old IC"],
+    DOB: result.DOB,
+    "State of birth": result["State of birth"]
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    "Validity Date": result["Validity Date"],
+    Nationality: result.Nationality.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+    "Ethnic/Race": result["Ethnic/Race"]
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    Religion: result.Religion.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+    Address: result.Address.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+  };
+
+  console.log({ user });
+
+  return user;
 }
-
-function scanIC() {
-  const bat = exec(`${cwd}/tools/automatic_reader.bat`, (error) => {
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-    extractInformation();
-  });
-
-  bat.stdout.on("data", (data) => {
-    console.log(data.toString());
-  });
-}
-
-scanIC();
