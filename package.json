@@ -1,19 +1,16 @@
 {
-    "name": "ic-scanner",
-    "version": "1.0.0",
-    "description": "",
-    "type": "module",
-    "main": "index.js",
-    "scripts": {
-        "dev": "nodemon app.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "pcsclite": "^1.0.1"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.22"
-    }
+  "name": "ic-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pcsclite": "^1.0.1"
+  }
 }
