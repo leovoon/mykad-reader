@@ -19,7 +19,9 @@ pcsc.on("reader", (reader) => {
 
       scanIC();
 
-      console.log("Done");
+      const user = JSON.parse(fs.readFileSync(outputUserFile));
+
+      console.log(`Done: ${user.Name}'s information saved.`);
     }
 
     if (
@@ -39,9 +41,9 @@ function scanIC() {
     }
   });
 
-  if (response) {
-    extractInformation();
-  }
+  if (!response) return;
+
+  extractInformation();
 }
 
 function extractInformation() {

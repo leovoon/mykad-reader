@@ -1,27 +1,27 @@
 Ready to read, press EnterGeneric EMV Smartcard Reader 0
 Selecting JPN application
 Reading JPN file 1 .
-Name:           *YAP YEE QIANG
+Name:           LIM KIAN THEONG
 .
-IC:             020720101693
+IC:             911212085307
 Sex:            Male
 Old IC:         
-DOB:            2002-07-20
-State of birth: SELANGOR
-Validity Date:  2023-01-05
+DOB:            1991-12-12
+State of birth: PERAK
+Validity Date:  2022-10-08
 Nationality:    WARGANEGARA
-Ethnic/Race:    THAI
-Religion:       TIADA UGAMA
+Ethnic/Race:    CINA
+Religion:       BUDDHA
 
 Reading JPN file 2 ................
 Reading JPN file 3 .....
 Reading JPN file 4 .
 Address:
-NO 9 JALAN SR 8/5
-TAMAN PUTRA INDAH
-
-43300	SERI KEMBANGAN
-SELANGOR
+NO 34
+HALA PEGOH 5
+TAMAN SRI PENGKALAN
+31650	IPOH
+PERAK
 
 Reading JPN file 5 .
 Reading JPN file 6 .
