@@ -17,11 +17,9 @@ pcsc.on("reader", (reader) => {
     ) {
       console.log("Card inserted");
 
-      scanIC();
+      const user = scanIC();
 
-      const user = JSON.parse(fs.readFileSync(outputUserFile));
-
-      console.log(`Done: ${user.Name}'s information saved.`);
+      console.log(`Done: ${user.Name}'s record saved.`);
     }
 
     if (
@@ -43,7 +41,9 @@ function scanIC() {
 
   if (!response) return;
 
-  extractInformation();
+  const user = extractInformation();
+
+  return user;
 }
 
 function extractInformation() {
@@ -62,5 +62,33 @@ function extractInformation() {
     return acc;
   }, {});
 
-  fs.writeFileSync(outputUserFile, JSON.stringify(result));
+  const user = {
+    Name: result.Name.replace(/[^\w\s]/gi, "")
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    IC: result.IC,
+    Sex: result.Sex.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()),
+    "Old IC": result["Old IC"],
+    DOB: result.DOB,
+    "State of birth": result["State of birth"]
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    "Validity Date": result["Validity Date"],
+    Nationality: result.Nationality.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+    "Ethnic/Race": result["Ethnic/Race"]
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    Religion: result.Religion.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+    Address: result.Address.toLowerCase().replace(/\b\w/g, (c) =>
+      c.toUpperCase()
+    ),
+  };
+
+  console.log({ user });
+
+  return user;
 }
