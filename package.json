@@ -12,5 +12,8 @@
     "license": "ISC",
     "dependencies": {
         "pcsclite": "^1.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
     }
 }
