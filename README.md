@@ -10,6 +10,22 @@ Before using this project, you will need the following:
 -   A computer running Windows, macOS, or Linux
 -   Node.js installed on your computer
 
+### Additional Prerequisites for Linux/WSL Users
+
+If you're using Linux or WSL, you'll need to install the PC/SC development packages first:
+
+```bash
+# For Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install libpcsclite-dev pcscd
+
+# For Fedora/RHEL
+sudo dnf install pcsc-lite-devel pcsc-lite
+
+# For Arch Linux
+sudo pacman -S pcsclite ccid
+```
+
 ## Installation
 
 To install the project, follow these steps:

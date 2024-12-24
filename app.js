@@ -1,6 +1,7 @@
 import pcsclite from "pcsclite";
 import fs from "fs";
 import { execSync } from "child_process";
+import clipboard from 'clipboardy';
 import { outputFile, outputUserFile, patterns, runFile } from "./const.js";
 
 const pcsc = pcsclite();
@@ -18,6 +19,11 @@ pcsc.on("reader", (reader) => {
       console.log("Card inserted");
 
       const user = scanIC();
+
+      if (user && user.IC && user.IC.trim() !== '') {
+        clipboard.writeSync(user.IC);
+        console.log(`IC number ${user.IC} copied to clipboard`);
+      }
 
       console.log(`Done: ${user.Name}'s record saved.`);
     }
