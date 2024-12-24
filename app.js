@@ -20,9 +20,14 @@ pcsc.on("reader", (reader) => {
 
       const user = scanIC();
 
-      if (user && user.IC && user.IC.trim() !== '') {
-        clipboard.writeSync(user.IC);
-        console.log(`IC number ${user.IC} copied to clipboard`);
+      if (user) {
+        if (user.IC && user.IC.trim() !== '') {
+          clipboard.writeSync(user.IC);
+          console.log(`IC number ${user.IC} copied to clipboard`);
+        } else if (user["Old IC"] && user["Old IC"].trim() !== '') {
+          clipboard.writeSync(user["Old IC"]);
+          console.log(`Old IC number ${user["Old IC"]} copied to clipboard`);
+        }
       }
 
       console.log(`Done: ${user.Name}'s record saved.`);
